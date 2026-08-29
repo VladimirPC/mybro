@@ -12,6 +12,7 @@ import { TriggerChips } from "@/components/trigger-chips";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { InstallApp } from "@/components/install-app";
 import { WidgetCard } from "@/components/widget-card";
 import { cigWord, formatAgo, formatMoney, formatNum, formatTime } from "@/lib/format";
 import { dayKey, nextTaperAt } from "@/lib/stats";
@@ -87,6 +88,7 @@ function Home() {
             <span className="text-muted"> — сохраним учёт в облаке и откроем связь с другом.</span>
           </Link>
         ) : null}
+        <InstallApp compact />
         <CountRing
           value={stats.today}
           max={stats.limit ?? 0}

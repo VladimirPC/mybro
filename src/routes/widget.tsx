@@ -114,8 +114,8 @@ function WidgetPage() {
           <DialogTitle>Как поставить виджет</DialogTitle>
           <div className="mt-3 space-y-3 text-sm leading-normal text-muted">
             <p>
-              Сайт не может положить карточку в меню «Виджеты» Android — для этого нужен нативный APK. Здесь это
-              отдельные экраны-виджеты: откройте нужный и закрепите.
+              Сайт не кладёт карточку в меню «Виджеты» Android. Это делает нативный APK Capacitor: долгий тап по
+              рабочему столу → «Виджеты» → Дыши. Здесь — экраны-виджеты, их можно закрепить как ярлык.
             </p>
             <p>
               <span className="text-fg">Уже установлено:</span> долгий тап по иконке «Дыши» → ярлыки «Сегодня»,
@@ -174,8 +174,7 @@ function WidgetPage() {
       <p className="text-xs tracking-wide text-muted uppercase">Виджеты</p>
       <h1 className="font-display mt-2 text-3xl tracking-tight">Выберите карточку</h1>
       <p className="mt-2 max-w-md text-sm text-muted">
-        Откройте вариант и закрепите на рабочем столе. Настоящий виджет лаунчера сайт поставить не может — это экраны
-        приложения.
+        Откройте вариант и закрепите как ярлык. В нативном APK те же четыре карточки стоят из меню «Виджеты» лаунчера.
       </p>
       <div className="mt-4 flex gap-2">
         <Button variant="secondary" onClick={() => setHelpOpen(true)}>

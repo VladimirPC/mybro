@@ -158,7 +158,8 @@ export function renderInstallPageHtml(template, { host, url } = {}) {
 }
 
 export function renderWebManifest(hostHeader) {
-  const name = appNameFromHost(hostHeader);
+  const siteTitle = readSiteTitle();
+  const name = siteTitle || appNameFromHost(hostHeader);
   return JSON.stringify(
     {
       name,
@@ -166,20 +167,80 @@ export function renderWebManifest(hostHeader) {
       id: "/",
       start_url: "/",
       scope: "/",
+      lang: "ru",
       display: "standalone",
-      background_color: "#000000",
-      theme_color: "#000000",
+      display_override: ["standalone", "minimal-ui", "browser"],
+      orientation: "portrait-primary",
+      background_color: "#0c0d0c",
+      theme_color: "#0c0d0c",
+      description: "Счётчик сигарет и план постепенного отказа.",
       icons: [
         {
           src: "/__grok/icon-180.png",
           sizes: "180x180",
           type: "image/png",
         },
+        {
+          src: "/icon-192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "/icon-512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "/icon-512-maskable.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
+      ],
+      shortcuts: [
+        {
+          name: "Сегодня",
+          short_name: "Сегодня",
+          url: "/widget?v=today",
+          description: "Счётчик за день",
+        },
+        {
+          name: "Остаток",
+          short_name: "Остаток",
+          url: "/widget?v=remain",
+          description: "Сколько ещё можно сегодня",
+        },
+        {
+          name: "Выкурить",
+          short_name: "+",
+          url: "/widget?v=plus",
+          description: "Отметить сигарету",
+        },
+        {
+          name: "Тяга",
+          short_name: "Тяга",
+          url: "/widget?v=crave",
+          description: "Переждать волну",
+        },
       ],
     },
     null,
     2,
   );
+}
+
+function readSiteTitle() {
+  try {
+    const sitePath = join(process.cwd(), OG_SITE_REL_PATH);
+    if (!existsSync(sitePath)) return "";
+    const raw = JSON.parse(readFileSync(sitePath, "utf8"));
+    const title = String(raw?.title ?? "").trim();
+    return title;
+  } catch {
+    return "";
+  }
 }
 
 export function grokPwaHeadTags(appName = DEFAULT_APP_NAME) {

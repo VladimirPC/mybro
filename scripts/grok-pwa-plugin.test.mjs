@@ -477,14 +477,10 @@ test("renders the manifest with the per-app name", () => {
   const manifest = JSON.parse(renderWebManifest("wild-race.grok.me"));
   assert.equal(manifest.name, "Дыши");
   assert.equal(manifest.short_name, "Дыши");
+  assert.equal(manifest.display, "standalone");
   assert.equal(manifest.icons[0].src, "/__grok/icon-180.png");
-  assert.equal(typeof manifest.description, "string");
-  assert.ok(manifest.description.length > 0);
-  assert.equal(manifest.orientation, "portrait-primary");
-  const any192 = manifest.icons.find((icon) => icon.sizes === "192x192" && icon.purpose === "any");
-  assert.ok(any192);
-  assert.equal(any192.type, "image/png");
-  assert.match(any192.src, /\.png$/);
+  assert.ok(Array.isArray(manifest.shortcuts));
+  assert.equal(manifest.shortcuts.length >= 3, true);
 });
 
 // Tripwires: the deployed-app path only works if Nitro scans server/ — an

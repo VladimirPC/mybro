@@ -8,5 +8,15 @@ dist/
 .output/
 .tanstack/
 *.keystore
+*.jks
 attachments/signing-key-info.txt
 signing-key-info.txt
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/.idea/
+android/app/src/main/assets/public
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/capacitor-cordova-android-plugins

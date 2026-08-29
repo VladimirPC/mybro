@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#b7c4b0</color>
+    <color name="colorPrimaryDark">#0c0d0c</color>
+    <color name="colorAccent">#b7c4b0</color>
+    <color name="dyshi_bg">#0c0d0c</color>
+    <color name="dyshi_surface">#151714</color>
+    <color name="dyshi_fg">#eceae4</color>
+    <color name="dyshi_muted">#8b9086</color>
+    <color name="dyshi_accent">#b7c4b0</color>
+    <color name="dyshi_danger">#c17a6a</color>
+</resources>

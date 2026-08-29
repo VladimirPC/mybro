@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Дыши</string>
+    <string name="title_activity_main">Дыши</string>
+    <string name="package_name">me.grok.mybro</string>
+    <string name="custom_url_scheme">me.grok.mybro</string>
+    <string name="widget_today_name">Дыши — сегодня</string>
+    <string name="widget_today_desc">Сколько сигарет сегодня</string>
+    <string name="widget_remain_name">Дыши — остаток</string>
+    <string name="widget_remain_desc">Сколько ещё можно сегодня</string>
+    <string name="widget_plus_name">Дыши — выкурить</string>
+    <string name="widget_plus_desc">Кнопка отметить сигарету</string>
+    <string name="widget_stats_name">Дыши — сводка</string>
+    <string name="widget_stats_desc">Сегодня, остаток и лимит</string>
+    <string name="widget_plus_label">+</string>
+    <string name="widget_over">сверх лимита</string>
+</resources>
