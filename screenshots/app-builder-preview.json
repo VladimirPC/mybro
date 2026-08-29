@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Дыши",
+      "hasCanvas": false,
+      "bodyTextLen": 392,
+      "bodyTextHash": "c3502496f226a5d61405762c0beb4a033a8968724b612654af6f0e12a2b6075f",
+      "bodyTextPrefix": "СЧЁТЧИК И ПЛАН СНИЖЕНИЯ Дыши. Чуть меньше — уже сегодня. Не геро",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Дыши",
+      "hasCanvas": false,
+      "bodyTextLen": 392,
+      "bodyTextHash": "c3502496f226a5d61405762c0beb4a033a8968724b612654af6f0e12a2b6075f",
+      "bodyTextPrefix": "СЧЁТЧИК И ПЛАН СНИЖЕНИЯ Дыши. Чуть меньше — уже сегодня. Не геро",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

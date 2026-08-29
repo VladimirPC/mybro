@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "me.grok.mybrobreathe.twa",
+      "sha256_cert_fingerprints": [
+        "61:CC:60:7F:05:FC:AA:1D:31:DB:69:01:3B:45:D4:E5:9A:F9:C0:4F:30:CB:A4:42:23:2B:E9:65:AD:38:8A:01"
+      ]
+    }
+  }
+]

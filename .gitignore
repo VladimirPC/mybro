@@ -1,0 +1,12 @@
+node_modules/
+.project_id
+.github_repo
+.env
+.env.*
+.vercel/
+dist/
+.output/
+.tanstack/
+*.keystore
+attachments/signing-key-info.txt
+signing-key-info.txt
