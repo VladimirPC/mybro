@@ -14,7 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { WidgetCard } from "@/components/widget-card";
 import { cigWord, formatAgo, formatMoney, formatNum, formatTime } from "@/lib/format";
-import { nextTaperAt } from "@/lib/stats";
+import { dayKey, nextTaperAt } from "@/lib/stats";
 import { useSmokeStore } from "@/lib/store";
 import { DEFAULT_TRIGGER, triggerLabel, type TriggerId } from "@/lib/types";
 import { useStats } from "@/lib/use-stats";
@@ -40,11 +40,17 @@ function Home() {
   const [logId, setLogId] = useState<string | null>(null);
   const [factOpen, setFactOpen] = useState(false);
   const [craveOpen, setCraveOpen] = useState(false);
+  const [confirmSoon, setConfirmSoon] = useState(false);
   const [editTriggerId, setEditTriggerId] = useState<string | null>(null);
 
   if (!onboarded) return <Onboarding onDone={complete} />;
 
-  function logCigarette(trigger: TriggerId = DEFAULT_TRIGGER) {
+  function logCigarette(trigger: TriggerId = DEFAULT_TRIGGER, force = false) {
+    const lastGapMin = stats.lastAt ? (stats.now - stats.lastAt) / 60_000 : Infinity;
+    if (!force && lastGapMin < 8) {
+      setConfirmSoon(true);
+      return;
+    }
     const log = addSmoke(trigger);
     setLogId(log.id);
     setFactOpen(true);
@@ -97,7 +103,7 @@ function Home() {
         <div className="grid grid-cols-3 gap-2">
           <Stat label="Среднее" value={formatNum(stats.allTimeAvg)} hint={`${stats.daysTracked} дн.`} />
           <Stat label="Неделя" value={String(stats.week)} hint="пн–вс" />
-          <Stat label="Месяц" value={String(stats.month)} hint="календарный" />
+          <Stat label="Отбил тягу" value={String(stats.resistedToday)} hint={`всего ${stats.resistedTotal}`} />
         </div>
 
         <div className="flex flex-col gap-2">
@@ -109,6 +115,10 @@ function Home() {
             Тяга — подождать
           </Button>
         </div>
+
+        {settings.pledgeDay === dayKey(stats.now) ? (
+          <p className="text-center text-sm text-ok">Сегодня договор: не выходить за лимит.</p>
+        ) : null}
 
         {reason ? (
           <p className="text-center text-sm text-muted">«{reason}»</p>
@@ -216,6 +226,36 @@ function Home() {
           setFactOpen(false);
         }}
       />
+
+      <Dialog open={confirmSoon} onOpenChange={setConfirmSoon}>
+        <DialogContent>
+          <DialogTitle>Слишком рано</DialogTitle>
+          <p className="text-sm text-muted">
+            С прошлой сигареты прошло меньше восьми минут. Часто это та же волна тяги, а не новая.
+          </p>
+          <div className="mt-4 flex flex-col gap-2">
+            <Button
+              size="lg"
+              variant="secondary"
+              onClick={() => {
+                setConfirmSoon(false);
+                setCraveOpen(true);
+              }}
+            >
+              Лучше подышать
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setConfirmSoon(false);
+                logCigarette(DEFAULT_TRIGGER, true);
+              }}
+            >
+              Всё равно записать
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={craveOpen} onOpenChange={setCraveOpen}>
         <DialogContent>
