@@ -89,6 +89,7 @@ export type Settings = {
   reason: string;
   fontScale: number;
   widget: WidgetConfig;
+  pledgeDay: string | null;
 };
 
 export type OnboardingInput = {
@@ -155,6 +156,7 @@ export const DEFAULT_SETTINGS: Settings = {
   reason: "",
   fontScale: 1.35,
   widget: DEFAULT_WIDGET,
+  pledgeDay: null,
 };
 
 export const DEFAULT_PLAN: ReductionPlan = {
