@@ -7,7 +7,7 @@ import { Card, CardHint, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { cigWord, dayWord, formatNum } from "@/lib/format";
-import { currentLimit, nextTaperAt } from "@/lib/stats";
+import { currentLimit, dayKey, nextTaperAt } from "@/lib/stats";
 import { useSmokeStore } from "@/lib/store";
 import { useStats } from "@/lib/use-stats";
 
@@ -27,6 +27,23 @@ function PlanPage() {
   return (
     <AppShell title="План снижения">
       <div className="page-enter space-y-4">
+        <Card>
+          <CardTitle>Договор на сегодня</CardTitle>
+          <CardHint className="mt-1">
+            Не «навсегда». Только до полуночи: не выходить за лимит.
+          </CardHint>
+          {settings.pledgeDay === dayKey(stats.now) ? (
+            <p className="mt-3 text-sm text-ok">Договор действует. Сегодня — в рамках лимита.</p>
+          ) : (
+            <Button
+              className="mt-4 w-full"
+              onClick={() => patchSettings({ pledgeDay: dayKey(stats.now) })}
+            >
+              Держу лимит до полуночи
+            </Button>
+          )}
+        </Card>
+
         <Card>
           <p className="text-xs tracking-wide text-muted uppercase">Сегодня можно</p>
           <p className="font-display mt-1 text-5xl tracking-tight tabular">{limit ?? "—"}</p>
