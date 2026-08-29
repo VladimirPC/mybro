@@ -16,6 +16,7 @@ export const ASSET_LINKS = [
 export const ASSET_LINKS_JSON = `${JSON.stringify(ASSET_LINKS, null, 2)}\n`;
 export const ASSET_LINKS_PATH = "/.well-known/assetlinks.json";
 
+/** @param {import("node:http").ServerResponse} res */
 function send(res) {
   const body = Buffer.from(ASSET_LINKS_JSON, "utf8");
   res.statusCode = 200;
@@ -26,6 +27,11 @@ function send(res) {
 }
 
 export function assetLinksPlugin() {
+  /**
+   * @param {import("node:http").IncomingMessage} req
+   * @param {import("node:http").ServerResponse} res
+   * @param {() => void} next
+   */
   const middleware = (req, res, next) => {
     const pathOnly = (req.url ?? "").split("?", 1)[0] ?? "";
     if ((req.method ?? "GET").toUpperCase() !== "GET" || pathOnly !== ASSET_LINKS_PATH) {
@@ -36,9 +42,11 @@ export function assetLinksPlugin() {
   };
   return {
     name: "dyshi-assetlinks",
+    /** @param {import("vite").ViteDevServer} server */
     configureServer(server) {
       server.middlewares.use(middleware);
     },
+    /** @param {import("vite").ViteDevServer} server */
     configurePreviewServer(server) {
       server.middlewares.use(middleware);
     },
