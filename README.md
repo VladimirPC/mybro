@@ -55,4 +55,4 @@ npm run build
 - PWA: иконки 192/512, service worker, `orientation`, описание
 - `assetlinks.json` для снятия адресной строки в установленном APK
 
-Настоящий виджет Android (меню «Виджеты» на рабочем столе) — в нативной оболочке Capacitor + Kotlin, пакет `me.grok.mybro`. Сборка: [native/ANDROID.md](native/ANDROID.md). TWA `me.grok.mybrobreathe.twa` остаётся сайтом без виджетов лаунчера.
+Настоящий виджет Android (меню «Виджеты» на рабочем столе) — в нативной оболочке Capacitor + Kotlin, пакет `me.grok.mybro`. Сборка: [native/ANDROID.md](native/ANDROID.md). В VS Code: Terminal → Run Task → **Gradle: assembleDebug**. TWA `me.grok.mybrobreathe.twa` остаётся сайтом без виджетов лаунчера.

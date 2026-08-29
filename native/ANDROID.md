@@ -6,9 +6,37 @@ Capacitor 8 + Kotlin. Пакет: `me.grok.mybro`. Это отдельное п�
 
 ## Собрать APK
 
-Нужны Android Studio и JDK 17.
+Нужны JDK 17 и Android SDK (API 36). Android Studio не обязательна.
 
-1. Клонируйте репозиторий, выполните `npm install`.
+### VS Code + Gradle
+
+1. Установите JDK 17 и Android SDK, задайте `JAVA_HOME` и `ANDROID_HOME` (см. ниже).
+2. Клонируйте репозиторий, откройте **корневую папку** в VS Code.
+3. Когда VS Code предложит расширения — поставьте **Extension Pack for Java** (внутри него Gradle for Java) и **Kotlin**.
+4. Новый терминал: `npm install`
+5. `Terminal → Run Task…`:
+   - **Gradle: assembleDebug** — debug-APK
+   - **Gradle: installDebug** — сборка и установка на подключённый телефон
+
+Либо вручную:
+
+```bash
+npm install
+npx cap sync android
+node scripts/write-android-local.mjs
+cd android
+./gradlew assembleDebug
+```
+
+Windows: `gradlew.bat` вместо `./gradlew`. APK: `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+В панели **Gradle** (иконка слона) корень проекта — папка `android/`. Если её нет: Command Palette → `Gradle: Refresh Gradle Projects`.
+
+`android/local.properties` создаётся сам из `ANDROID_HOME`. Пример пути — `android/local.properties.example`. Файл в git не коммитится.
+
+### Android Studio
+
+1. `npm install`
 2. Откройте папку `android/` в Android Studio.
 3. Дождитесь Gradle Sync.
 4. Run на телефоне или Build → Build APK(s).

@@ -1,0 +1,5 @@
+## Скопируйте в local.properties и подставьте свой SDK.
+## Windows: C:/Users/ИМЯ/AppData/Local/Android/Sdk
+## macOS: /Users/ИМЯ/Library/Android/sdk
+## Linux: /home/ИМЯ/Android/Sdk
+sdk.dir=C:/Users/YOU/AppData/Local/Android/Sdk

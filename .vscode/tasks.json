@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Android: SDK path",
+      "type": "shell",
+      "command": "node scripts/write-android-local.mjs",
+      "problemMatcher": []
+    },
+    {
+      "label": "Android: sync Capacitor",
+      "type": "npm",
+      "script": "cap:sync",
+      "problemMatcher": []
+    },
+    {
+      "label": "Gradle: assembleDebug",
+      "type": "shell",
+      "command": "./gradlew assembleDebug",
+      "windows": {
+        "command": ".\\gradlew.bat assembleDebug"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/android",
+        "env": {
+          "JAVA_HOME": "${env:JAVA_HOME}",
+          "ANDROID_HOME": "${env:ANDROID_HOME}",
+          "ANDROID_SDK_ROOT": "${env:ANDROID_SDK_ROOT}"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn": ["Android: SDK path"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Gradle: installDebug",
+      "type": "shell",
+      "command": "./gradlew installDebug",
+      "windows": {
+        "command": ".\\gradlew.bat installDebug"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/android",
+        "env": {
+          "JAVA_HOME": "${env:JAVA_HOME}",
+          "ANDROID_HOME": "${env:ANDROID_HOME}",
+          "ANDROID_SDK_ROOT": "${env:ANDROID_SDK_ROOT}"
+        }
+      },
+      "dependsOn": ["Android: SDK path"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

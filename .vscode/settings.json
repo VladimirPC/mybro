@@ -1,0 +1,32 @@
+{
+  "java.import.gradle.wrapper.enabled": true,
+  "java.import.gradle.offline.enabled": false,
+  "java.import.gradle.annotationProcessing.enabled": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.configuration.checkProjectSettingsExclusions": false,
+  "java.project.importOnFirstTimeStartup": "automatic",
+  "java.project.resourceFilters": [
+    "node_modules",
+    ".git",
+    "dist",
+    ".output",
+    ".tanstack",
+    "android/.gradle",
+    "android/app/build",
+    "android/build"
+  ],
+  "gradle.autoDetect": "on",
+  "gradle.nestedProjects": ["android"],
+  "kotlin.languageServer.enabled": true,
+  "files.exclude": {
+    "android/.gradle": true,
+    "android/app/build": true,
+    "android/build": true,
+    "android/capacitor-cordova-android-plugins": true
+  },
+  "files.watcherExclude": {
+    "**/android/.gradle/**": true,
+    "**/android/**/build/**": true,
+    "**/node_modules/**": true
+  }
+}
