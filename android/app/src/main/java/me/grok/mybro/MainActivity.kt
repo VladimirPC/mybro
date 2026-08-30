@@ -14,6 +14,11 @@ class MainActivity : BridgeActivity() {
         cookies.setAcceptCookie(true)
         cookies.setAcceptThirdPartyCookies(webView, true)
         webView.settings.domStorageEnabled = true
+        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.settings.userAgentString =
+            webView.settings.userAgentString
+                .replace("; wv", "")
+                .replace("Version/4.0 ", "")
         handleIntent(intent)
     }
 
@@ -27,6 +32,12 @@ class MainActivity : BridgeActivity() {
         if (intent == null) return
         if (intent.getBooleanExtra(WidgetStore.EXTRA_PENDING_LOG, false)) {
             WidgetStore.setPendingLog(this, true)
+        }
+        val data = intent.data
+        if (data != null && data.scheme == "https" && data.host == "mybro.grok.me") {
+            val url = data.toString()
+            bridge?.webView?.post { bridge.webView.loadUrl(url) }
+            return
         }
         val path = intent.getStringExtra(WidgetStore.EXTRA_PATH) ?: return
         val url = WidgetStore.APP_ORIGIN + path

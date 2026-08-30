@@ -4,6 +4,18 @@ Capacitor 8 + Kotlin. Пакет: `me.grok.mybro`. Это отдельное п�
 
 Сайт внутри WebView: [https://mybro.grok.me](https://mybro.grok.me). Цифры на виджетах обновляются, пока открыто приложение.
 
+## Вход Google / X
+
+OAuth идёт **внутри WebView**, не через Chrome. Список `allowNavigation` в `capacitor.config.ts` держит Google, X и `*.grok.me` в приложении. User-Agent без метки `wv`, иначе Google отвечает «небезопасный браузер».
+
+После изменения конфига:
+
+```bash
+npx cap sync android
+```
+
+Затем пересоберите APK. Если Google всё равно блокирует WebView — войдите почтой.
+
 ## Собрать APK
 
 Нужны JDK 17 и Android SDK (API 36). Android Studio не обязательна.
