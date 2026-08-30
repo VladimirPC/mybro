@@ -42,7 +42,6 @@ class WidgetSyncPlugin : Plugin() {
     }
 
     private fun numLong(call: PluginCall, key: String): Long {
-        call.getLong(key)?.let { return it }
         call.getDouble(key)?.let { return it.toLong() }
         call.getInt(key)?.let { return it.toLong() }
         return call.getString(key)?.toLongOrNull() ?: 0L
