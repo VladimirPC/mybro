@@ -1,42 +1,40 @@
 # Нативная оболочка Android
 
-Capacitor 8 + Kotlin. Пакет: `me.grok.mybro`. Сайт внутри приложения: `https://cabin-nova-wood-craft.grok.me`.
+Capacitor 8 + Kotlin. Пакет: `me.grok.mybro`.
+Сайт внутри приложения: `https://cabin-nova-wood-craft.grok.me`.
 
-## Почему Play Protect ругается, а PWABuilder — нет
+Счётчик живёт **только в аккаунте** (вход через Google). На телефоне ничего не хранится.
 
-Кнопка **Run** в Android Studio ставит **debug APK**. Он подписан тестовым ключом Studio. Google Play Protect почти всегда помечает такие файлы как подозрительные. PWABuilder подписывал **release-ключом** — поэтому там было тихо.
+## Иконка и Play Protect
 
-Иконка-робот Android Studio больше не используется. На рабочем столе — тёмный лист «Дыши». После смены иконки **удалите старое приложение** и поставьте новое, иначе лаунчер кэширует старую картинку.
+В mipmap больше нет робота Android Studio — на рабочем столе кольцо «Дыши».
 
-## Как собрать правильно (чтобы не ругался Protect)
+Кнопка **Run** раньше ставила **debug APK** с тестовым ключом. Play Protect почти всегда помечает такие файлы. Теперь и debug, и release подписываются ключом `android/app/release.keystore`.
 
-1. Android Studio: **Build → Generate Signed App Bundle or APK → APK**.
-2. Создайте ключ (или возьмите `signing.keystore` из zip PWABuilder).
-3. Build variant: **release**, не debug.
-4. Поставьте `app-release.apk`.
+Как собрать:
 
-Либо файлы в проекте:
+1. GitHub Desktop / `git pull` ветки `main`.
+2. Android Studio: откройте папку `android`.
+3. **Build → Generate Signed App Bundle or APK → APK → release**.
+4. Либо просто **Build → Build APK(s)** — подпись уже в `build.gradle`.
+5. Удалите старое «Дыши» с телефона и поставьте новый APK.
 
-- `android/app/release.keystore`
-- `android/app/keystore.properties` (из `keystore.properties.example`)
+Ключ (уже лежит в проекте):
 
-Затем:
+- файл: `android/app/release.keystore`
+- alias: `dyshi`
+- пароли: `dyshi-release-2026` (см. `keystore.properties`)
 
-```bash
-cd android
-./gradlew assembleRelease
-```
+PWABuilder был «зелёным», потому что подписывал release-ключом и ставил иконку из PWA. Studio больше делает то же самое.
 
-APK: `android/app/build/outputs/apk/release/app-release.apk`.
-
-Debug (`Run`) для себя можно, но Protect будет ругаться — это не вирус.
+Play Protect всё равно может спросить один раз у APK не из Play Market — это нормально. Нажмите «всё равно установить». После публикации в Play предупреждение уйдёт.
 
 ## Виджеты
 
-После установки откройте приложение, войдите в Google и подождите загрузку учёта. Цифры уходят на виджеты сами. Долгий тап по рабочему столу → Виджеты → Дыши.
+Цифры пишет само приложение, когда вы его открыли и вошли. Долгий тап по рабочему столу → Виджеты → Дыши.
 
-Если виджет пустой — откройте «Дыши» ещё раз (чтобы сайт с мостом виджета успел загрузиться) и не закрывайте его сразу.
+Если виджет пустой: откройте «Дыши», подождите 2–3 секунды на главном экране (должно быть «Учёт в аккаунте»), вернитесь на рабочий стол.
 
-## После правок сайта
+## Обязательно: опубликовать сайт
 
-Сайт внутри APK — удалённый. Сначала опубликуйте веб-приложение, потом при смене адреса в `capacitor.config.ts` сделайте `npx cap sync android` и соберите **новый release APK**.
+APK открывает **опубликованный** сайт, не GitHub. После правок в Grok нажмите **Publish**, затем соберите APK заново.

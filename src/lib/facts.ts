@@ -269,11 +269,12 @@ function pickFrom(list: Fact[], seed: string, avoidId?: string | null): Fact {
 }
 
 export function pickBenefitFact(seed: string, avoidId?: string | null): Fact {
-  return pickFrom(
-    FACTS.filter((f) => BENEFIT_KINDS.includes(f.kind)),
-    seed,
-    avoidId,
-  );
+  const list = FACTS.filter((f) => BENEFIT_KINDS.includes(f.kind));
+  if (avoidId) {
+    const idx = list.findIndex((f) => f.id === avoidId);
+    if (idx >= 0) return list[(idx + 1) % list.length]!;
+  }
+  return pickFrom(list, seed, avoidId);
 }
 
 export function pickHarmFact(seed: string, avoidId?: string | null): Fact {

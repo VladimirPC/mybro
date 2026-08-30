@@ -15,8 +15,8 @@ android {
         applicationId "me.grok.mybro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -31,25 +31,22 @@ android {
     }
     signingConfigs {
         release {
-            if (releaseKeystore.exists() && keystorePropsFile.exists()) {
-                storeFile releaseKeystore
-                storePassword keystoreProps['storePassword']
-                keyAlias keystoreProps['keyAlias']
-                keyPassword keystoreProps['keyPassword']
-            }
+            storeFile releaseKeystore
+            storePassword keystoreProps['storePassword'] ?: 'dyshi-release-2026'
+            keyAlias keystoreProps['keyAlias'] ?: 'dyshi'
+            keyPassword keystoreProps['keyPassword'] ?: 'dyshi-release-2026'
         }
     }
     buildTypes {
         debug {
-            debuggable true
+            debuggable false
+            signingConfig signingConfigs.release
         }
         release {
             minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (releaseKeystore.exists() && keystorePropsFile.exists()) {
-                signingConfig signingConfigs.release
-            }
+            signingConfig signingConfigs.release
         }
     }
 }

@@ -1,0 +1,32 @@
+{
+  "appId": "me.grok.mybro",
+  "appName": "Дыши",
+  "webDir": "native/www",
+  "server": {
+    "url": "https://cabin-nova-wood-craft.grok.me",
+    "androidScheme": "https",
+    "allowNavigation": [
+      "*.grok.me",
+      "accounts.google.com",
+      "*.google.com",
+      "*.googleusercontent.com",
+      "x.com",
+      "*.x.com",
+      "twitter.com",
+      "*.twitter.com",
+      "api.twitter.com",
+      "api.x.com"
+    ]
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#0c0d0c",
+    "overrideUserAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0c0d0c"
+    }
+  }
+}

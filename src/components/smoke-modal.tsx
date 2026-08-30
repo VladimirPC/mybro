@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { TriggerChips } from "@/components/trigger-chips";
-import { KIND_LABEL, pickBenefitFact, pickHarmFact, type Fact } from "@/lib/facts";
+import { pickBenefitFact, pickHarmFact, type Fact } from "@/lib/facts";
 import { cigWord, formatNum } from "@/lib/format";
 import { recoveryProgress } from "@/lib/recovery";
 import type { AppStats } from "@/lib/stats";
@@ -68,7 +68,7 @@ export function SmokeModal({
         {benefit ? (
           <div className="mt-4 rounded-xl bg-surface-2 p-4">
             <p className="text-xs tracking-wide text-primary uppercase">
-              {KIND_LABEL[benefit.kind]} · {benefit.source}
+              Польза постепенного отказа · {benefit.source}
             </p>
             <p className="font-display mt-1 text-lg tracking-tight">{benefit.title}</p>
             <p className="mt-2 text-sm leading-normal text-muted">{benefit.body}</p>

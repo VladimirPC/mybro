@@ -1,0 +1,17 @@
+{
+  "plugins": [
+    {
+      "pkg": "@capacitor/app",
+      "classpath": "com.capacitorjs.plugins.app.AppPlugin"
+    },
+    {
+      "pkg": "@capacitor/status-bar",
+      "classpath": "com.capacitorjs.plugins.statusbar.StatusBarPlugin"
+    }
+  ],
+  "packageClassList": [
+    "me.grok.mybro.WidgetSyncPlugin",
+    "com.capacitorjs.plugins.app.AppPlugin",
+    "com.capacitorjs.plugins.statusbar.StatusBarPlugin"
+  ]
+}

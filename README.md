@@ -1,58 +1,13 @@
 # Дыши (mybro)
 
-Счётчик сигарет и план постепенного отказа: среднее за все дни, лимит, аналитика, облако и круг друзей.
+Счётчик сигарет и план постепенного отказа. Все данные хранятся **только в аккаунте** (вход через Google). На телефоне ничего не остаётся.
 
-**Живой сайт:** [https://mybro.grok.me](https://mybro.grok.me)
+**Живой сайт:** [https://cabin-nova-wood-craft.grok.me](https://cabin-nova-wood-craft.grok.me)
 
 **Репозиторий:** [https://github.com/VladimirPC/mybro](https://github.com/VladimirPC/mybro)
 
-Android package (TWA / PWABuilder): `me.grok.mybrobreathe.twa`
+Android (Capacitor, виджеты рабочего стола): пакет `me.grok.mybro`. Сборка: [native/ANDROID.md](native/ANDROID.md).
 
-Digital Asset Links: [https://mybro.grok.me/.well-known/assetlinks.json](https://mybro.grok.me/.well-known/assetlinks.json)
+После правок в Grok нажмите **Publish**, затем соберите **новый APK** в Android Studio (Build → Build APK или Generate Signed APK). APK открывает опубликованный сайт.
 
----
-
-## Продолжить в другом чате Grok
-
-1. Подключите GitHub того же аккаунта **VladimirPC** (или сделайте fork).
-2. Вставьте в новый чат текст из [`GROK_CONTINUE.md`](GROK_CONTINUE.md).
-3. После правок пушьте в `main` — это источник правды.
-
-`mybro.grok.me` привязан к проекту Grok App Builder, где приложение собрали. Новый чат на другом аккаунте Grok получит **новый** превью-адрес. Чтобы сайт оставался `mybro.grok.me`, правки нужно либо вносить в исходный проект, либо деплоить этот репозиторий на Vercel и повесить тот же домен.
-
----
-
-## Запуск
-
-```bash
-npm install
-npm run dev
-```
-
-Сборка:
-
-```bash
-npm run build
-```
-
-Вход: почта + пароль (от 8 символов). Google/X во встроенном превью часто зависают — на обычном сайте работают.
-
-Данные без входа живут на устройстве. После входа — в облаке. «Круг» даёт другому человеку только просмотр, не правку чужих записей.
-
----
-
-## Что уже есть
-
-- Учёт сигарет с временем и причиной (по умолчанию «Работа»)
-- Среднее = все сигареты / все дни с начала
-- План снижения лимита
-- Аналитика, здоровье, факты после каждой сигареты
-- Три дыхательные схемы при тяге (4–7–8, квадрат, 4–6)
-- Пауза, если сигареты идут чаще чем раз в 8 минут
-- Договор на сегодня: удержать лимит до полуночи
-- Масштаб шрифта (по умолчанию 135%)
-- 12 карточек-экранов виджета (`/widget?preset=...`)
-- PWA: иконки 192/512, service worker, `orientation`, описание
-- `assetlinks.json` для снятия адресной строки в установленном APK
-
-Настоящий виджет Android (меню «Виджеты» на рабочем столе) — в нативной оболочке Capacitor + Kotlin, пакет `me.grok.mybro`. Сборка: [native/ANDROID.md](native/ANDROID.md). В VS Code: Terminal → Run Task → **Gradle: assembleDebug**. TWA `me.grok.mybrobreathe.twa` остаётся сайтом без виджетов лаунчера.
+Иконка — кольцо «Дыши», не робот Android Studio. Подпись — `android/app/release.keystore` (и debug, и release), чтобы Play Protect не принимал сборку за тестовую.

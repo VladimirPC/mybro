@@ -11,12 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AssetlinksDotjsonRouteImport } from './routes/assetlinks[.]json'
 import { Route as CircleRouteImport } from './routes/circle'
 import { Route as HealthRouteImport } from './routes/health'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as WidgetRouteImport } from './routes/widget'
+import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known.assetlinks[.]json'
 import { Route as CircleUserIdRouteImport } from './routes/circle.$userId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -28,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssetlinksDotjsonRoute = AssetlinksDotjsonRouteImport.update({
+  id: '/assetlinks.json',
+  path: '/assetlinks.json',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CircleRoute = CircleRouteImport.update({
@@ -60,6 +67,12 @@ const WidgetRoute = WidgetRouteImport.update({
   path: '/widget',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotwellKnownAssetlinksDotjsonRoute =
+  DotwellKnownAssetlinksDotjsonRouteImport.update({
+    id: '/.well-known/assetlinks.json',
+    path: '/.well-known/assetlinks.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const CircleUserIdRoute = CircleUserIdRouteImport.update({
   id: '/$userId',
   path: '/$userId',
@@ -74,24 +87,28 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/assetlinks.json': typeof AssetlinksDotjsonRoute
   '/circle': typeof CircleRouteWithChildren
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
   '/settings': typeof SettingsRoute
   '/widget': typeof WidgetRoute
+  '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/circle/$userId': typeof CircleUserIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/assetlinks.json': typeof AssetlinksDotjsonRoute
   '/circle': typeof CircleRouteWithChildren
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
   '/settings': typeof SettingsRoute
   '/widget': typeof WidgetRoute
+  '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/circle/$userId': typeof CircleUserIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -99,12 +116,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/assetlinks.json': typeof AssetlinksDotjsonRoute
   '/circle': typeof CircleRouteWithChildren
   '/health': typeof HealthRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
   '/settings': typeof SettingsRoute
   '/widget': typeof WidgetRoute
+  '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/circle/$userId': typeof CircleUserIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -113,36 +132,42 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/analytics'
+    | '/assetlinks.json'
     | '/circle'
     | '/health'
     | '/login'
     | '/plan'
     | '/settings'
     | '/widget'
+    | '/.well-known/assetlinks.json'
     | '/circle/$userId'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/analytics'
+    | '/assetlinks.json'
     | '/circle'
     | '/health'
     | '/login'
     | '/plan'
     | '/settings'
     | '/widget'
+    | '/.well-known/assetlinks.json'
     | '/circle/$userId'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/analytics'
+    | '/assetlinks.json'
     | '/circle'
     | '/health'
     | '/login'
     | '/plan'
     | '/settings'
     | '/widget'
+    | '/.well-known/assetlinks.json'
     | '/circle/$userId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -150,12 +175,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  AssetlinksDotjsonRoute: typeof AssetlinksDotjsonRoute
   CircleRoute: typeof CircleRouteWithChildren
   HealthRoute: typeof HealthRoute
   LoginRoute: typeof LoginRoute
   PlanRoute: typeof PlanRoute
   SettingsRoute: typeof SettingsRoute
   WidgetRoute: typeof WidgetRoute
+  DotwellKnownAssetlinksDotjsonRoute: typeof DotwellKnownAssetlinksDotjsonRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -173,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/analytics'
       fullPath: '/analytics'
       preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assetlinks.json': {
+      id: '/assetlinks.json'
+      path: '/assetlinks.json'
+      fullPath: '/assetlinks.json'
+      preLoaderRoute: typeof AssetlinksDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/circle': {
@@ -217,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WidgetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/assetlinks.json': {
+      id: '/.well-known/assetlinks.json'
+      path: '/.well-known/assetlinks.json'
+      fullPath: '/.well-known/assetlinks.json'
+      preLoaderRoute: typeof DotwellKnownAssetlinksDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/circle/$userId': {
       id: '/circle/$userId'
       path: '/$userId'
@@ -248,12 +289,14 @@ const CircleRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
+  AssetlinksDotjsonRoute: AssetlinksDotjsonRoute,
   CircleRoute: CircleRouteWithChildren,
   HealthRoute: HealthRoute,
   LoginRoute: LoginRoute,
   PlanRoute: PlanRoute,
   SettingsRoute: SettingsRoute,
   WidgetRoute: WidgetRoute,
+  DotwellKnownAssetlinksDotjsonRoute: DotwellKnownAssetlinksDotjsonRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

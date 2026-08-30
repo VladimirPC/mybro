@@ -1,4 +1,4 @@
-const CACHE = "dyshi-v1";
+const CACHE = "dyshi-v4";
 const PRECACHE = ["/", "/favicon.svg", "/icon-192.png", "/icon-512.png", "/icon-512-maskable.png"];
 
 self.addEventListener("install", (event) => {
@@ -25,13 +25,23 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/auth/")) return;
+  // Never cache the worker itself or hashed bundles as cache-first — that froze
+  // old localStorage builds on phones after a publish.
+  const networkFirst =
+    req.mode === "navigate" ||
+    url.pathname === "/sw.js" ||
+    url.pathname.startsWith("/assets/") ||
+    url.pathname.endsWith(".js") ||
+    url.pathname.endsWith(".css");
 
-  if (req.mode === "navigate") {
+  if (networkFirst) {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((cache) => cache.put(req, copy));
+          if (req.mode === "navigate" && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((cache) => cache.put(req, copy));
+          }
           return res;
         })
         .catch(async () => (await caches.match(req)) || (await caches.match("/"))),
@@ -40,15 +50,14 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(req).then((hit) => {
-      if (hit) return hit;
-      return fetch(req).then((res) => {
+    fetch(req)
+      .then((res) => {
         if (res.ok) {
           const copy = res.clone();
           caches.open(CACHE).then((cache) => cache.put(req, copy));
         }
         return res;
-      });
-    }),
+      })
+      .catch(async () => (await caches.match(req)) || fetch(req)),
   );
 });

@@ -22,7 +22,12 @@ export function CountRing({
   const over = max > 0 && value > max;
   const dash = Math.min(1, value / Math.max(1, max)) * c;
   return (
-    <div className={cn("relative mx-auto", className)} style={{ width: size, height: size }}>
+    <div
+      className={cn("relative mx-auto", className)}
+      style={{ width: size, height: size }}
+      data-today-count={value}
+      data-limit={max > 0 ? max : undefined}
+    >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
         <circle
           cx={size / 2}

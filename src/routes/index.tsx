@@ -17,7 +17,8 @@ import { nextTaperAt } from "@/lib/stats";
 import { useSmokeStore } from "@/lib/store";
 import { DEFAULT_TRIGGER, triggerLabel, type TriggerId } from "@/lib/types";
 import { useStats } from "@/lib/use-stats";
-import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { flushCloud } from "@/lib/sync";
+import { CloudStatusLine } from "@/components/cloud-status";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -32,7 +33,6 @@ function Home() {
   const settings = useSmokeStore((s) => s.settings);
   const plan = useSmokeStore((s) => s.plan);
   const stats = useStats();
-  const { user, isPending } = useCurrentUserState();
 
   const [logId, setLogId] = useState<string | null>(null);
   const [factOpen, setFactOpen] = useState(false);
@@ -43,6 +43,7 @@ function Home() {
     const log = addSmoke(trigger);
     setLogId(log.id);
     setFactOpen(true);
+    void flushCloud().catch(() => undefined);
   }
 
   const todayLogs = logs
@@ -66,16 +67,16 @@ function Home() {
         </button>
       }
     >
-      <div className="page-enter space-y-5">
-        {!isPending && !user ? (
-          <Link
-            to="/login"
-            className="block rounded-xl bg-surface px-4 py-3 text-sm shadow-[var(--shadow-border)]"
-          >
-            <span className="text-primary">Войдите</span>
-            <span className="text-muted"> — сохраним учёт в облаке и откроем связь с другом.</span>
-          </Link>
-        ) : null}
+      <div
+        className="page-enter space-y-5"
+        data-today-count={stats.today}
+        data-remain={stats.remaining ?? undefined}
+        data-limit={stats.limit ?? undefined}
+        data-last-at={stats.lastAt ?? undefined}
+        data-resisted={stats.resistedToday}
+        data-over={stats.overLimit ? "1" : "0"}
+      >
+        <CloudStatusLine />
         <CountRing
           value={stats.today}
           max={stats.limit ?? 0}

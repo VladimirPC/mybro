@@ -16,14 +16,24 @@ type WidgetSyncPlugin = {
 
 const WidgetSync = registerPlugin<WidgetSyncPlugin>("WidgetSync");
 
+type NativeBridge = {
+  update?: (json: string) => void;
+};
+
 function cap(): { isNativePlatform?: () => boolean; Plugins?: { WidgetSync?: WidgetSyncPlugin } } | undefined {
   if (typeof window === "undefined") return undefined;
   return (window as unknown as { Capacitor?: ReturnType<typeof cap> }).Capacitor;
 }
 
+function dyshiNative(): NativeBridge | undefined {
+  if (typeof window === "undefined") return undefined;
+  return (window as unknown as { DyshiNative?: NativeBridge }).DyshiNative;
+}
+
 export function isNativeApp() {
   try {
     if (typeof window === "undefined") return false;
+    if (typeof (window as unknown as { DyshiNative?: unknown }).DyshiNative !== "undefined") return true;
     if (Capacitor.isNativePlatform()) return true;
     return Boolean(cap()?.isNativePlatform?.());
   } catch {
@@ -43,8 +53,23 @@ function payload(data: NativeWidgetPayload) {
 }
 
 export async function pushNativeWidgets(data: NativeWidgetPayload) {
-  if (!isNativeApp()) return;
   const body = payload(data);
+  if (typeof window !== "undefined") {
+    (window as unknown as { __DYSHI_WIDGET__?: typeof body }).__DYSHI_WIDGET__ = body;
+    const root = document.documentElement;
+    root.dataset.dyshiToday = String(body.today);
+    root.dataset.dyshiRemain = String(body.remain);
+    root.dataset.dyshiLimit = String(body.limit);
+    root.dataset.dyshiLastAt = String(body.lastAt);
+    root.dataset.dyshiResisted = String(body.resistedToday);
+    root.dataset.dyshiOver = body.overLimit ? "1" : "0";
+  }
+  if (!isNativeApp()) return;
+  try {
+    dyshiNative()?.update?.(JSON.stringify(body));
+  } catch {
+    /* interface not ready */
+  }
   try {
     const injected = cap()?.Plugins?.WidgetSync;
     if (injected?.update) {

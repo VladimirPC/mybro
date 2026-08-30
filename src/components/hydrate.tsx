@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { CloudSync } from "@/components/cloud-sync";
 import { NativeWidgetBridge } from "@/components/native-widget-bridge";
@@ -30,6 +30,8 @@ export function HydrateGate({ children }: { children: ReactNode }) {
   const { user, isPending } = useCurrentUserState();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onLogin = pathname.startsWith("/login");
+  const [savingPlan, setSavingPlan] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--text-scale", String(fontScale ?? 1.35));
@@ -45,11 +47,11 @@ export function HydrateGate({ children }: { children: ReactNode }) {
   }, [user, isPending, resetAll]);
 
   if (onLogin) {
-    if (!isPending && user) return <RedirectToSignIn to="/" />;
+    if (!isPending && user && !user.isDevFallback) return <RedirectToSignIn to="/" />;
     return <>{children}</>;
   }
   if (isPending) return <Splash text="Проверяем вход…" />;
-  if (!user) return <RedirectToSignIn />;
+  if (!user || user.isDevFallback) return <RedirectToSignIn />;
 
   return (
     <div className={cn("min-h-dvh", !hydrated && "pointer-events-none")} aria-busy={!hydrated}>
@@ -58,15 +60,37 @@ export function HydrateGate({ children }: { children: ReactNode }) {
       <RegisterSw />
       {!hydrated ? (
         <Splash text="Загружаем ваш учёт из аккаунта…" />
-      ) : !onboarded && !onLogin ? (
+      ) : !onboarded ? (
         <Onboarding
           onDone={(input) => {
             complete(input);
-            void flushCloud().catch(() => undefined);
+            setSavingPlan(true);
+            setSaveError(null);
+            void (async () => {
+              try {
+                await flushCloud();
+              } catch {
+                setSaveError("План на экране есть, но в аккаунт пока не ушёл. Проверьте сеть — сохраним ещё раз.");
+                try {
+                  await flushCloud();
+                } catch {
+                  /* status is in cloud-status */
+                }
+              } finally {
+                setSavingPlan(false);
+              }
+            })();
           }}
         />
+      ) : savingPlan ? (
+        <Splash text="Сохраняем план в аккаунт…" />
       ) : (
-        children
+        <>
+          {saveError ? (
+            <p className="bg-danger/15 px-4 py-2 text-center text-xs text-danger">{saveError}</p>
+          ) : null}
+          {children}
+        </>
       )}
     </div>
   );

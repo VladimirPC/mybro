@@ -13,6 +13,7 @@ import { exportSnapshot, useSmokeStore } from "@/lib/store";
 import { FONT_SCALE_MAX, FONT_SCALE_MIN, type WidgetLayout } from "@/lib/types";
 import { WIDGET_PRESETS, WIDGET_THEMES } from "@/lib/widget-presets";
 import { useStats } from "@/lib/use-stats";
+import { CloudStatusLine } from "@/components/cloud-status";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
@@ -49,9 +50,12 @@ function SettingsPage() {
           ) : user ? (
             <>
               <CardHint className="mt-1">
-                Учёт хранится в аккаунте, не на телефоне. На другом устройстве войдите тем же Google — цифры те же.
+                Учёт хранится только в аккаунте, не на телефоне. На другом устройстве войдите тем же Google — цифры те же.
                 Друг ведёт свои, вы смотрите в «Круге».
               </CardHint>
+              <div className="mt-3">
+                <CloudStatusLine />
+              </div>
               <div className="mt-4">
                 <UserButton />
               </div>
