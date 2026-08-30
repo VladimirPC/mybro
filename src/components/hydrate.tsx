@@ -44,11 +44,12 @@ export function HydrateGate({ children }: { children: ReactNode }) {
     }
   }, [user, isPending, resetAll]);
 
-  if (isPending) return <Splash text="Проверяем вход…" />;
-  if (!user) {
-    if (onLogin) return <>{children}</>;
-    return <RedirectToSignIn />;
+  if (onLogin) {
+    if (!isPending && user) return <RedirectToSignIn to="/" />;
+    return <>{children}</>;
   }
+  if (isPending) return <Splash text="Проверяем вход…" />;
+  if (!user) return <RedirectToSignIn />;
 
   return (
     <div className={cn("min-h-dvh", !hydrated && "pointer-events-none")} aria-busy={!hydrated}>
