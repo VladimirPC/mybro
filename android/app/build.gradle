@@ -1,6 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+def releaseKeystore = file('release.keystore')
+def keystorePropsFile = file('keystore.properties')
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+
 android {
     namespace = "me.grok.mybro"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -22,6 +29,16 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    signingConfigs {
+        release {
+            if (releaseKeystore.exists() && keystorePropsFile.exists()) {
+                storeFile releaseKeystore
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
     buildTypes {
         debug {
             debuggable true
@@ -30,17 +47,8 @@ android {
             minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            def ks = file('release.keystore')
-            def props = file('keystore.properties')
-            if (ks.exists() && props.exists()) {
-                def p = new Properties()
-                props.withInputStream { p.load(it) }
-                signingConfig signingConfigs.create('releaseLocal') {
-                    storeFile ks
-                    storePassword p['storePassword']
-                    keyAlias p['keyAlias']
-                    keyPassword p['keyPassword']
-                }
+            if (releaseKeystore.exists() && keystorePropsFile.exists()) {
+                signingConfig signingConfigs.release
             }
         }
     }
