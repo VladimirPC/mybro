@@ -12,8 +12,9 @@
         android:id="@+id/caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="сегодня"
         android:textColor="@color/dyshi_muted"
-        android:textSize="12sp" />
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/value"
@@ -21,14 +22,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="sans-serif-medium"
+        android:text="0"
         android:textColor="@color/dyshi_fg"
-        android:textSize="42sp" />
+        android:textSize="44sp" />
 
     <TextView
         android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:text="откройте приложение"
         android:textColor="@color/dyshi_muted"
         android:textSize="12sp" />
 </LinearLayout>
