@@ -4,6 +4,7 @@
     <string name="title_activity_main">Дыши</string>
     <string name="package_name">me.grok.mybro</string>
     <string name="custom_url_scheme">me.grok.mybro</string>
+    <string name="app_origin">https://cabin-nova-wood-craft.grok.me</string>
     <string name="widget_today_name">Дыши — сегодня</string>
     <string name="widget_today_desc">Сколько сигарет сегодня</string>
     <string name="widget_remain_name">Дыши — остаток</string>

@@ -53,8 +53,8 @@ export function Onboarding({ onDone }: { onDone: (input: OnboardingInput) => voi
           <p className="text-sm tracking-wide text-muted uppercase">Счётчик и план снижения</p>
           <h1 className="font-display mt-3 text-4xl leading-tight tracking-tight">Дыши. Чуть меньше — уже сегодня.</h1>
           <p className="mt-4 text-base leading-normal text-muted">
-            Не героический понедельник. Сначала честный учёт, потом лимит чуть ниже среднего, потом ещё ниже. Цель —
-            постепенно бросить.
+            Вы вошли. План заполняется один раз и сохраняется в аккаунте — на любом телефоне те же цифры. Не героический
+            понедельник: сначала честный учёт, потом лимит чуть ниже среднего.
           </p>
           <div className="mt-8 space-y-3 text-sm text-muted">
             <p>Каждая сигарета — время, триггер и справка о вреде.</p>

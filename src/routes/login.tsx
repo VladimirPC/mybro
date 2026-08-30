@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { GROK_PROVIDERS, authClient, authEnabled, signIn } from "@/lib/auth/client";
 import { authErrorText, persistPreviewBearer, withTimeout } from "@/lib/session-token";
@@ -72,11 +72,35 @@ function Login() {
         <p className="text-xs tracking-wide text-muted uppercase">Дыши</p>
         <h1 className="font-display mt-2 text-3xl tracking-tight">Войти в свой учёт</h1>
         <p className="mt-2 text-sm text-muted">
-          Во встроенном предпросмотре Google и X часто зависают на «Signing you in…» — окно не может вернуться. Почта
-          работает сразу.
+          Счётчик хранится в аккаунте, не на телефоне. Войдите через Google — на другом устройстве будут те же цифры.
         </p>
 
-        <form className="mt-6 space-y-3" onSubmit={onEmail}>
+        {authEnabled ? (
+          <div className="mt-6 space-y-2">
+            {GROK_PROVIDERS.map((p) => (
+              <Button
+                key={p.providerId}
+                type="button"
+                variant={p.idp === "google" ? "default" : "secondary"}
+                className="w-full"
+                disabled={busy !== null}
+                onClick={() => void onOauth(p.providerId)}
+              >
+                {busy === p.providerId ? "Ждём окно входа…" : `Продолжить с ${p.label}`}
+              </Button>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-6 text-sm text-muted">Вход выключен.</p>
+        )}
+
+        <div className="mt-8 mb-3 flex items-center gap-3 text-xs text-subtle">
+          <span className="h-px flex-1 bg-border" />
+          или почтой
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <form className="space-y-3" onSubmit={onEmail}>
           {mode === "up" ? (
             <div>
               <Label htmlFor="name">Имя</Label>
@@ -123,41 +147,6 @@ function Login() {
         >
           {mode === "up" ? "Уже есть аккаунт — войти" : "Нет аккаунта — создать"}
         </button>
-
-        {authEnabled ? (
-          <div className="mt-8">
-            <div className="mb-3 flex items-center gap-3 text-xs text-subtle">
-              <span className="h-px flex-1 bg-border" />
-              или отдельным окном
-              <span className="h-px flex-1 bg-border" />
-            </div>
-            <div className="space-y-2">
-              {GROK_PROVIDERS.map((p) => (
-                <Button
-                  key={p.providerId}
-                  type="button"
-                  variant="secondary"
-                  className="w-full"
-                  disabled={busy !== null}
-                  onClick={() => void onOauth(p.providerId)}
-                >
-                  {busy === p.providerId ? "Ждём окно входа…" : `Продолжить с ${p.label}`}
-                </Button>
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-subtle">
-              Нужно разрешить всплывающие окна. Если зависло «Signing you in…» — закройте его и войдите почтой.
-            </p>
-          </div>
-        ) : (
-          <p className="mt-6 text-sm text-muted">Вход выключен.</p>
-        )}
-
-        <p className="mt-8 text-center text-sm text-muted">
-          <Link to="/" className="text-primary">
-            Пока без входа, только на этом телефоне
-          </Link>
-        </p>
       </div>
     </main>
   );

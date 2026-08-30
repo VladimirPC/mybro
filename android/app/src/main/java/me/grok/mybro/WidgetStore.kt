@@ -3,7 +3,6 @@ package me.grok.mybro
 import android.content.Context
 
 object WidgetStore {
-    const val APP_ORIGIN = "https://mybro.grok.me"
     const val PREFS = "dyshi_widget"
     const val EXTRA_PATH = "dyshi_path"
     const val EXTRA_PENDING_LOG = "dyshi_pending_log"
@@ -15,17 +14,22 @@ object WidgetStore {
         val lastAt: Long? = null,
         val resistedToday: Int = 0,
         val overLimit: Boolean = false,
+        val ready: Boolean = false,
     )
+
+    fun origin(context: Context): String = context.getString(R.string.app_origin)
 
     fun save(context: Context, snap: Snapshot) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putBoolean("ready", true)
             .putInt("today", snap.today)
             .putInt("remain", snap.remain ?: -1)
             .putInt("limit", snap.limit ?: -1)
             .putLong("lastAt", snap.lastAt ?: 0L)
             .putInt("resistedToday", snap.resistedToday)
             .putBoolean("overLimit", snap.overLimit)
-            .apply()
+            .commit()
+        DyshiWidgets.updateAll(context)
     }
 
     fun load(context: Context): Snapshot {
@@ -40,19 +44,20 @@ object WidgetStore {
             lastAt = lastAt.takeIf { it > 0 },
             resistedToday = p.getInt("resistedToday", 0),
             overLimit = p.getBoolean("overLimit", false),
+            ready = p.getBoolean("ready", false),
         )
     }
 
     fun setPendingLog(context: Context, value: Boolean) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
             .putBoolean("pendingLog", value)
-            .apply()
+            .commit()
     }
 
     fun consumePendingLog(context: Context): Boolean {
         val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val value = p.getBoolean("pendingLog", false)
-        if (value) p.edit().putBoolean("pendingLog", false).apply()
+        if (value) p.edit().putBoolean("pendingLog", false).commit()
         return value
     }
 }

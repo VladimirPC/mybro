@@ -1,34 +1,42 @@
 # Нативная оболочка Android
 
-Capacitor 8 + Kotlin. Пакет: `me.grok.mybro`.
+Capacitor 8 + Kotlin. Пакет: `me.grok.mybro`. Сайт внутри приложения: `https://cabin-nova-wood-craft.grok.me`.
 
-## Google Play Protect и иконка
+## Почему Play Protect ругается, а PWABuilder — нет
 
-**Run / Debug APK** из Android Studio подписан debug-ключом. Play Protect часто помечает такие файлы как подозрительные — это не вирус, а debug-подпись. PWABuilder был тише, потому что там стоял настоящий `signing.keystore`.
+Кнопка **Run** в Android Studio ставит **debug APK**. Он подписан тестовым ключом Studio. Google Play Protect почти всегда помечает такие файлы как подозрительные. PWABuilder подписывал **release-ключом** — поэтому там было тихо.
 
-Соберите **Release** со своим ключом:
+Иконка-робот Android Studio больше не используется. На рабочем столе — тёмный лист «Дыши». После смены иконки **удалите старое приложение** и поставьте новое, иначе лаунчер кэширует старую картинку.
 
-1. Положите `signing.keystore` в `android/app/release.keystore` (в git не кладите).
-2. Скопируйте `android/app/keystore.properties.example` → `android/app/keystore.properties` и впишите пароли.
-3. Android Studio: **Build → Generate Signed App Bundle / APK → APK → release**.
+## Как собрать правильно (чтобы не ругался Protect)
 
-Или: `cd android && ./gradlew assembleRelease`. APK: `android/app/build/outputs/apk/release/app-release.apk`.
+1. Android Studio: **Build → Generate Signed App Bundle or APK → APK**.
+2. Создайте ключ (или возьмите `signing.keystore` из zip PWABuilder).
+3. Build variant: **release**, не debug.
+4. Поставьте `app-release.apk`.
 
-Иконка — тёмный лист. Если после установки старая — удалите приложение и поставьте заново.
+Либо файлы в проекте:
 
-## Вход Google / X
+- `android/app/release.keystore`
+- `android/app/keystore.properties` (из `keystore.properties.example`)
 
-OAuth идёт внутри WebView. После изменения `capacitor.config.ts`: `npx cap sync android` и пересоберите APK.
-
-## Собрать debug (Play Protect может ругаться)
+Затем:
 
 ```bash
-npm install
-npx cap sync android
 cd android
-./gradlew assembleDebug
+./gradlew assembleRelease
 ```
+
+APK: `android/app/build/outputs/apk/release/app-release.apk`.
+
+Debug (`Run`) для себя можно, но Protect будет ругаться — это не вирус.
 
 ## Виджеты
 
-Долгий тап по рабочему столу → Виджеты → Дыши. Цифры появляются после того, как открыто приложение и загрузился аккаунт.
+После установки откройте приложение, войдите в Google и подождите загрузку учёта. Цифры уходят на виджеты сами. Долгий тап по рабочему столу → Виджеты → Дыши.
+
+Если виджет пустой — откройте «Дыши» ещё раз (чтобы сайт с мостом виджета успел загрузиться) и не закрывайте его сразу.
+
+## После правок сайта
+
+Сайт внутри APK — удалённый. Сначала опубликуйте веб-приложение, потом при смене адреса в `capacitor.config.ts` сделайте `npx cap sync android` и соберите **новый release APK**.

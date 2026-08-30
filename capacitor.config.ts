@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: "Дыши",
   webDir: "native/www",
   server: {
-    url: "https://mybro.grok.me",
+    url: "https://cabin-nova-wood-craft.grok.me",
     androidScheme: "https",
     // OAuth (Google / X / Grok broker) must stay in the same WebView so the
     // session cookie is set here, not in Chrome.

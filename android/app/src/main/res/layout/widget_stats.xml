@@ -31,6 +31,7 @@
                 android:id="@+id/today"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="0"
                 android:textColor="@color/dyshi_fg"
                 android:textSize="28sp" />
         </LinearLayout>
@@ -52,6 +53,7 @@
                 android:id="@+id/remain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="—"
                 android:textColor="@color/dyshi_fg"
                 android:textSize="28sp" />
         </LinearLayout>
@@ -73,6 +75,7 @@
                 android:id="@+id/limit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="—"
                 android:textColor="@color/dyshi_fg"
                 android:textSize="28sp" />
         </LinearLayout>

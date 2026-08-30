@@ -22,9 +22,9 @@ class WidgetSyncPlugin : Plugin() {
                 lastAt = lastAt.takeIf { it > 0 },
                 resistedToday = numInt(call, "resistedToday", 0),
                 overLimit = call.getBoolean("overLimit") ?: false,
+                ready = true,
             ),
         )
-        DyshiWidgets.updateAll(context)
         call.resolve()
     }
 

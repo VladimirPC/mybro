@@ -28,31 +28,29 @@ object DyshiWidgets {
 
     fun bind(context: Context, mgr: AppWidgetManager, id: Int, cls: Class<out AppWidgetProvider>) {
         val snap = WidgetStore.load(context)
-        val empty = snap.lastAt == null && snap.today == 0
         val views = when (cls) {
             RemainWidget::class.java -> numberTile(
                 context,
                 caption = "осталось",
-                value = snap.remain?.toString() ?: if (empty) "—" else "0",
+                value = snap.remain?.toString() ?: if (snap.limit != null) "0" else "—",
                 hint = when {
-                    empty -> "откройте Дыши"
-                    snap.limit != null -> "лимит ${'$'}{snap.limit}"
+                    snap.limit != null -> "лимит ${snap.limit}"
                     else -> "лимит не задан"
                 },
                 danger = snap.overLimit,
                 path = "/widget?v=remain",
                 request = 12,
             )
-            PlusWidget::class.java -> plusTile(context, snap, empty)
-            StatsWidget::class.java -> statsTile(context, snap, empty)
+            PlusWidget::class.java -> plusTile(context, snap)
+            StatsWidget::class.java -> statsTile(context, snap)
             else -> numberTile(
                 context,
                 caption = "сегодня",
                 value = snap.today.toString(),
                 hint = when {
-                    empty -> "откройте Дыши"
-                    snap.limit != null -> "из ${'$'}{snap.limit}"
-                    else -> "без лимита"
+                    snap.limit != null -> "из ${snap.limit}"
+                    snap.lastAt != null -> time(snap.lastAt)
+                    else -> "за сегодня"
                 },
                 danger = snap.overLimit,
                 path = "/widget?v=today",
@@ -60,6 +58,7 @@ object DyshiWidgets {
             )
         }
         mgr.updateAppWidget(id, views)
+        mgr.notifyAppWidgetViewDataChanged(id, R.id.root)
     }
 
     private fun numberTile(
@@ -80,19 +79,16 @@ object DyshiWidgets {
         return views
     }
 
-    private fun plusTile(context: Context, snap: WidgetStore.Snapshot, empty: Boolean): RemoteViews {
+    private fun plusTile(context: Context, snap: WidgetStore.Snapshot): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_plus)
         views.setTextViewText(R.id.caption, "Дыши")
-        views.setTextViewText(
-            R.id.hint,
-            if (empty) "откройте приложение" else "сегодня ${'$'}{snap.today}",
-        )
+        views.setTextViewText(R.id.hint, "сегодня ${snap.today}")
         views.setOnClickPendingIntent(R.id.root, openApp(context, "/widget?v=plus", 13))
         views.setOnClickPendingIntent(R.id.plus, logAndOpen(context, 14))
         return views
     }
 
-    private fun statsTile(context: Context, snap: WidgetStore.Snapshot, empty: Boolean): RemoteViews {
+    private fun statsTile(context: Context, snap: WidgetStore.Snapshot): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_stats)
         views.setTextViewText(R.id.today, snap.today.toString())
         views.setTextViewText(R.id.remain, snap.remain?.toString() ?: "—")
@@ -100,15 +96,17 @@ object DyshiWidgets {
         views.setTextViewText(
             R.id.last,
             when {
-                empty -> "откройте Дыши"
-                snap.lastAt != null -> SimpleDateFormat("HH:mm", Locale("ru")).format(Date(snap.lastAt))
-                else -> "ещё ни одной"
+                snap.lastAt != null -> "последняя ${time(snap.lastAt)}"
+                else -> "ещё ни одной сегодня"
             },
         )
         views.setViewVisibility(R.id.over, if (snap.overLimit) View.VISIBLE else View.GONE)
         views.setOnClickPendingIntent(R.id.root, openApp(context, "/widget?v=wide", 15))
         return views
     }
+
+    private fun time(at: Long): String =
+        SimpleDateFormat("HH:mm", Locale("ru")).format(Date(at))
 
     private fun openApp(context: Context, path: String, request: Int): PendingIntent {
         val intent = Intent(context, MainActivity::class.java).apply {

@@ -5,6 +5,7 @@ import { useStats } from "@/lib/use-stats";
 
 export function NativeWidgetBridge() {
   const hydrated = useSmokeStore((s) => s.hydrated);
+  const onboarded = useSmokeStore((s) => s.onboarded);
   const addSmoke = useSmokeStore((s) => s.addSmoke);
   const stats = useStats();
 
@@ -18,31 +19,44 @@ export function NativeWidgetBridge() {
       resistedToday: stats.resistedToday,
       overLimit: stats.overLimit,
     });
-  }, [hydrated, stats.today, stats.remaining, stats.limit, stats.lastAt, stats.resistedToday, stats.overLimit]);
+  }, [
+    hydrated,
+    onboarded,
+    stats.today,
+    stats.remaining,
+    stats.limit,
+    stats.lastAt,
+    stats.resistedToday,
+    stats.overLimit,
+  ]);
 
   useEffect(() => {
     if (!isNativeApp()) return;
     let remove: (() => void) | undefined;
     void (async () => {
-      const { App } = await import("@capacitor/app");
-      const { StatusBar, Style } = await import("@capacitor/status-bar");
       try {
-        await StatusBar.setBackgroundColor({ color: "#0c0d0c" });
-        await StatusBar.setStyle({ style: Style.Dark });
+        const { App } = await import("@capacitor/app");
+        const { StatusBar, Style } = await import("@capacitor/status-bar");
+        try {
+          await StatusBar.setBackgroundColor({ color: "#0c0d0c" });
+          await StatusBar.setStyle({ style: Style.Dark });
+        } catch {
+          /* web */
+        }
+        const apply = async () => {
+          const pending = await consumeNativePending();
+          if (pending.log) addSmoke();
+        };
+        await apply();
+        const handle = await App.addListener("resume", () => {
+          void apply();
+        });
+        remove = () => {
+          void handle.remove();
+        };
       } catch {
-        /* web */
+        /* Capacitor not injected */
       }
-      const apply = async () => {
-        const pending = await consumeNativePending();
-        if (pending.log) addSmoke();
-      };
-      await apply();
-      const handle = await App.addListener("resume", () => {
-        void apply();
-      });
-      remove = () => {
-        void handle.remove();
-      };
     })();
     return () => remove?.();
   }, [addSmoke]);

@@ -15,11 +15,13 @@ class MainActivity : BridgeActivity() {
         cookies.setAcceptThirdPartyCookies(webView, true)
         webView.settings.domStorageEnabled = true
         webView.settings.javaScriptCanOpenWindowsAutomatically = true
-        webView.settings.userAgentString =
-            webView.settings.userAgentString
-                .replace("; wv", "")
-                .replace("Version/4.0 ", "")
         handleIntent(intent)
+        webView.post { DyshiWidgets.updateAll(this) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        DyshiWidgets.updateAll(this)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -34,13 +36,13 @@ class MainActivity : BridgeActivity() {
             WidgetStore.setPendingLog(this, true)
         }
         val data = intent.data
-        if (data != null && data.scheme == "https" && data.host == "mybro.grok.me") {
+        if (data != null && data.scheme == "https") {
             val url = data.toString()
             bridge?.webView?.post { bridge.webView.loadUrl(url) }
             return
         }
         val path = intent.getStringExtra(WidgetStore.EXTRA_PATH) ?: return
-        val url = WidgetStore.APP_ORIGIN + path
+        val url = WidgetStore.origin(this) + path
         bridge?.webView?.post {
             bridge.webView.loadUrl(url)
         }

@@ -28,24 +28,32 @@ let lastHash = "";
 let timer: ReturnType<typeof setTimeout> | null = null;
 let unsub: (() => void) | null = null;
 let syncing = false;
+let accountName = "";
+
+export async function flushCloud() {
+  if (!accountName) return;
+  const snap = takeSnapshot();
+  lastHash = hashSnap(snap);
+  await pushMyState({ data: { ...snap, name: accountName } });
+}
 
 export async function startCloudSync(name: string) {
+  accountName = name;
   if (syncing) return;
   syncing = true;
   try {
     const remote = await pullMyState();
-    const local = takeSnapshot();
-    if (remote?.onboarded) {
+    if (remote) {
       useSmokeStore.getState().replaceSnapshot(remote);
       lastHash = hashSnap(remote);
-    } else if (local.onboarded) {
-      lastHash = hashSnap(local);
-      await pushMyState({ data: { ...local, name } });
     } else {
-      lastHash = hashSnap(local);
+      useSmokeStore.getState().resetAll();
+      lastHash = hashSnap(takeSnapshot());
     }
   } catch {
     lastHash = hashSnap(takeSnapshot());
+  } finally {
+    useSmokeStore.getState().setHydrated();
   }
 
   unsub?.();
@@ -58,15 +66,16 @@ export async function startCloudSync(name: string) {
       const h = hashSnap(snap);
       if (h === lastHash) return;
       lastHash = h;
-      void pushMyState({ data: { ...snap, name } }).catch(() => {
+      void pushMyState({ data: { ...snap, name: accountName } }).catch(() => {
         lastHash = "";
       });
-    }, 700);
+    }, 400);
   });
 }
 
 export function stopCloudSync() {
   syncing = false;
+  accountName = "";
   unsub?.();
   unsub = null;
   if (timer) clearTimeout(timer);

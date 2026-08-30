@@ -7,7 +7,6 @@ import { Card, CardHint, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { InstallApp } from "@/components/install-app";
 import { UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { exportSnapshot, useSmokeStore } from "@/lib/store";
@@ -50,8 +49,8 @@ function SettingsPage() {
           ) : user ? (
             <>
               <CardHint className="mt-1">
-                Учёт пишется в вашу базу и не пропадает после перезапуска. Друг ведёт свои цифры — вы смотрите в
-                «Круге».
+                Учёт хранится в аккаунте, не на телефоне. На другом устройстве войдите тем же Google — цифры те же.
+                Друг ведёт свои, вы смотрите в «Круге».
               </CardHint>
               <div className="mt-4">
                 <UserButton />
@@ -63,8 +62,7 @@ function SettingsPage() {
           ) : (
             <>
               <CardHint className="mt-1">
-                Без входа данные живут только в этом браузере. Войдите — сохраним на сервере и можно будет смотреть
-                прогресс друга.
+                Без входа учёта нет. Войдите через Google — счётчик сохранится в аккаунте.
               </CardHint>
               <Button className="mt-4" asChild>
                 <Link to="/login">Войти или создать аккаунт</Link>
@@ -178,13 +176,21 @@ function SettingsPage() {
           </div>
         </Card>
 
-        <InstallApp />
+        <Card>
+          <CardTitle>Без адресной строки</CardTitle>
+          <CardHint className="mt-1">
+            Файл Digital Asset Links уже на сайте (`/.well-known/assetlinks.json`). Откройте эту ссылку в Chrome на
+            телефоне — должен показаться JSON с package_name. Затем удалите старый APK и поставьте тот же файл заново.
+            Полоска с адресом пропадает не сразу: Chrome кэширует проверку.
+          </CardHint>
+        </Card>
 
         <Card>
           <CardTitle>Виджеты</CardTitle>
           <CardHint className="mt-1">
-            12 карточек внутри приложения. Долгий тап по иконке «Дыши» даёт ярлыки Сегодня / Остаток / Выкурить / Тяга.
-            Нативные виджеты рабочего стола — в APK Capacitor: меню лаунчера «Виджеты» → Дыши.
+            12 карточек: сегодня, остаток, кольцо, кнопка «+», последняя, широкий, сводка, деньги, время жизни, план,
+            тяга и полный экран. Откройте «Виджеты» и закрепите нужную. Меню «Виджеты» лаунчера сайт заполнить не
+            может.
           </CardHint>
           <div className="mt-4">
             <p className="mb-2 text-sm text-muted">Тема</p>

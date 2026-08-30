@@ -5,17 +5,15 @@ import { Undo2, Wind } from "lucide-react";
 import { useState } from "react";
 import { Breathe } from "@/components/breathe";
 import { AppShell } from "@/components/layout";
-import { Onboarding } from "@/components/onboarding";
 import { CountRing } from "@/components/ring";
 import { SmokeModal } from "@/components/smoke-modal";
 import { TriggerChips } from "@/components/trigger-chips";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { InstallApp } from "@/components/install-app";
 import { WidgetCard } from "@/components/widget-card";
 import { cigWord, formatAgo, formatMoney, formatNum, formatTime } from "@/lib/format";
-import { dayKey, nextTaperAt } from "@/lib/stats";
+import { nextTaperAt } from "@/lib/stats";
 import { useSmokeStore } from "@/lib/store";
 import { DEFAULT_TRIGGER, triggerLabel, type TriggerId } from "@/lib/types";
 import { useStats } from "@/lib/use-stats";
@@ -24,8 +22,6 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
-  const onboarded = useSmokeStore((s) => s.onboarded);
-  const complete = useSmokeStore((s) => s.completeOnboarding);
   const addSmoke = useSmokeStore((s) => s.addSmoke);
   const undoSmoke = useSmokeStore((s) => s.undoSmoke);
   const addResisted = useSmokeStore((s) => s.addResisted);
@@ -41,17 +37,9 @@ function Home() {
   const [logId, setLogId] = useState<string | null>(null);
   const [factOpen, setFactOpen] = useState(false);
   const [craveOpen, setCraveOpen] = useState(false);
-  const [confirmSoon, setConfirmSoon] = useState(false);
   const [editTriggerId, setEditTriggerId] = useState<string | null>(null);
 
-  if (!onboarded) return <Onboarding onDone={complete} />;
-
-  function logCigarette(trigger: TriggerId = DEFAULT_TRIGGER, force = false) {
-    const lastGapMin = stats.lastAt ? (stats.now - stats.lastAt) / 60_000 : Infinity;
-    if (!force && lastGapMin < 8) {
-      setConfirmSoon(true);
-      return;
-    }
+  function logCigarette(trigger: TriggerId = DEFAULT_TRIGGER) {
     const log = addSmoke(trigger);
     setLogId(log.id);
     setFactOpen(true);
@@ -88,7 +76,6 @@ function Home() {
             <span className="text-muted"> — сохраним учёт в облаке и откроем связь с другом.</span>
           </Link>
         ) : null}
-        <InstallApp compact />
         <CountRing
           value={stats.today}
           max={stats.limit ?? 0}
@@ -105,7 +92,7 @@ function Home() {
         <div className="grid grid-cols-3 gap-2">
           <Stat label="Среднее" value={formatNum(stats.allTimeAvg)} hint={`${stats.daysTracked} дн.`} />
           <Stat label="Неделя" value={String(stats.week)} hint="пн–вс" />
-          <Stat label="Отбил тягу" value={String(stats.resistedToday)} hint={`всего ${stats.resistedTotal}`} />
+          <Stat label="Месяц" value={String(stats.month)} hint="календарный" />
         </div>
 
         <div className="flex flex-col gap-2">
@@ -117,10 +104,6 @@ function Home() {
             Тяга — подождать
           </Button>
         </div>
-
-        {settings.pledgeDay === dayKey(stats.now) ? (
-          <p className="text-center text-sm text-ok">Сегодня договор: не выходить за лимит.</p>
-        ) : null}
 
         {reason ? (
           <p className="text-center text-sm text-muted">«{reason}»</p>
@@ -228,36 +211,6 @@ function Home() {
           setFactOpen(false);
         }}
       />
-
-      <Dialog open={confirmSoon} onOpenChange={setConfirmSoon}>
-        <DialogContent>
-          <DialogTitle>Слишком рано</DialogTitle>
-          <p className="text-sm text-muted">
-            С прошлой сигареты прошло меньше восьми минут. Часто это та же волна тяги, а не новая.
-          </p>
-          <div className="mt-4 flex flex-col gap-2">
-            <Button
-              size="lg"
-              variant="secondary"
-              onClick={() => {
-                setConfirmSoon(false);
-                setCraveOpen(true);
-              }}
-            >
-              Лучше подышать
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setConfirmSoon(false);
-                logCigarette(DEFAULT_TRIGGER, true);
-              }}
-            >
-              Всё равно записать
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <Dialog open={craveOpen} onOpenChange={setCraveOpen}>
         <DialogContent>

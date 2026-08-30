@@ -22,7 +22,6 @@
     "cap:sync": "npx cap sync android"
   },
   "dependencies": {
-    "@capacitor/android": "^8.5.0",
     "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.5.0",
     "@capacitor/status-bar": "^8.0.3",
